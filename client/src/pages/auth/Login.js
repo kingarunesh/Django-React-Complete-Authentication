@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Grid, Card, Box, Tabs, Tab, Typography } from "@mui/material";
-import Pic1 from "../../../images/form.png";
+import Pic1 from "../../images/form.png";
 import LoginForm from "./LoginForm";
 import Register from "./Register";
 import { ShoppingBag } from "@mui/icons-material";
