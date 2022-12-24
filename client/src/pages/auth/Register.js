@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { TextField, Button, Box, Alert, FormControlLabel, Checkbox, Typography } from "@mui/material";
 import { Form, NavLink, useNavigate } from "react-router-dom";
 import { useRegisterUserMutation } from "../../services/userAuthApi";
+import { storeToken } from "../../services/localStorageServices";
 
 const Register = () => {
     //!     Server Error
@@ -30,13 +31,13 @@ const Register = () => {
         // console.log(res);
 
         if (res.error) {
-            // console.log(typeof res.error.data.error);
             console.log(res.error.data.error);
             setServerError(res.error.data.error);
         }
 
         if (res.data) {
             console.log(res.data);
+            storeToken(res.data.token);
             navigate("/dashboard");
         }
     };

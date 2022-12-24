@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { TextField, Button, Box, Alert, CircularProgress, Typography } from "@mui/material";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useLoginUserMutation } from "../../services/userAuthApi";
+import { storeToken } from "../../services/localStorageServices";
 
 const LoginForm = () => {
     //!     Server Error
@@ -29,16 +30,12 @@ const LoginForm = () => {
 
         if (res.error) {
             console.log(res.error.data);
-
-            // res.error.data.error.non_field_errors;
-
             setServerError(res.error.data);
         }
 
-        // console.log("DEBUG : ", server_error.error.non_field_errors[0]);
-
         if (res.data) {
             console.log(res.data);
+            storeToken(res.data.token);
             navigate("/dashboard");
         }
     };

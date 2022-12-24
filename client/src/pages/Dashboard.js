@@ -2,12 +2,14 @@ import React from "react";
 import { Grid, Typography, Button, CssBaseline } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import ChangePassword from "./auth/ChangePassword";
+import { removeToken } from "../services/localStorageServices";
 
 const Dashboard = () => {
     const navigate = useNavigate();
 
     const logoutHandler = () => {
         console.log("Logout");
+        removeToken();
         navigate("/login");
     };
 
