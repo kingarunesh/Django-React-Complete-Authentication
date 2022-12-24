@@ -1,12 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TextField, Button, Box, Alert, CircularProgress, Typography } from "@mui/material";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useLoginUserMutation } from "../../services/userAuthApi";
-import { storeToken } from "../../services/localStorageServices";
+import { getToken, storeToken } from "../../services/localStorageServices";
+import { useDispatch } from "react-redux";
+import { setUserToken, unSetUserToken } from "../../features/authSlice";
 
 const LoginForm = () => {
     //!     Server Error
     const [server_error, setServerError] = useState({});
+
+    //!     slice
+    const dispatch = useDispatch();
 
     //!     RTK Query
     const [loginUser, { isLoading }] = useLoginUserMutation();
@@ -35,10 +40,24 @@ const LoginForm = () => {
 
         if (res.data) {
             console.log(res.data);
+
+            //*     save in local storage
             storeToken(res.data.token);
+
+            //*     redux save
+            let { access_token } = getToken();
+            dispatch(setUserToken({ access_token: access_token }));
+
+            //*     redirect
             navigate("/dashboard");
         }
     };
+
+    //!     un set redux access_token
+    let { access_token } = getToken();
+    useEffect(() => {
+        dispatch(setUserToken({ access_token: access_token }));
+    }, [access_token, dispatch]);
 
     return (
         <>
