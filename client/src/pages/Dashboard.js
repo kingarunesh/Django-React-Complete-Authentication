@@ -6,12 +6,16 @@ import { getToken, removeToken } from "../services/localStorageServices";
 import { useDispatch } from "react-redux";
 import { unSetUserToken } from "../features/authSlice";
 import { useGetLoggedUserQuery } from "../services/userAuthApi";
+import { setUserInfo, unSetUserInfo } from "../features/userSlice";
 
 const Dashboard = () => {
     const [userData, setUserData] = useState({
         email: "",
         name: "",
     });
+
+    //!     Redux
+    const dispatch = useDispatch();
 
     //!     Access Token
     const { access_token } = getToken();
@@ -32,11 +36,24 @@ const Dashboard = () => {
         }
     }, [data, isSuccess]);
 
-    //!     Redux
-    const dispatch = useDispatch();
+    //!     store user info in redux store
+    useEffect(() => {
+        if (data && isSuccess) {
+            dispatch(
+                setUserInfo({
+                    email: data.email,
+                    name: data.name,
+                })
+            );
+        }
+    }, [data, isSuccess, dispatch]);
 
     //!     Logout Handler
     const logoutHandler = () => {
+        //*     unset user info
+        dispatch(unSetUserInfo({ email: "", name: "" }));
+
+        //*     set token
         dispatch(unSetUserToken({ access_token: null }));
 
         removeToken();

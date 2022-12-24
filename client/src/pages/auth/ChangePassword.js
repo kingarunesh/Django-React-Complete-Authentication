@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Grid, TextField, Button, Box, Alert } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const ChangePassword = () => {
     const navigate = useNavigate();
@@ -39,6 +40,10 @@ const ChangePassword = () => {
             setError({ status: true, message: "All fields are required.", type: "error" });
         }
     };
+
+    const myData = useSelector((state) => state.user);
+
+    console.log(myData);
 
     return (
         <>
