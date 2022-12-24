@@ -1,15 +1,9 @@
 import React, { useState } from "react";
-import { TextField, Button, Box, Alert, FormControlLabel, Checkbox } from "@mui/material";
+import { TextField, Button, Box, Alert, FormControlLabel, Checkbox, Typography } from "@mui/material";
 import { Form, NavLink, useNavigate } from "react-router-dom";
 import { useRegisterUserMutation } from "../../services/userAuthApi";
 
 const Register = () => {
-    // const [error, setError] = useState({
-    //     status: false,
-    //     message: "",
-    //     type: "",
-    // });
-
     //!     Server Error
     const [server_error, setServerError] = useState({});
 
@@ -33,49 +27,56 @@ const Register = () => {
 
         const res = await registerUser(accuretData);
 
-        console.log(res);
+        // console.log(res);
 
-        // if (accuretData.name && accuretData.email && accuretData.password && accuretData.password2 && accuretData.tc !== null) {
-        //     if (accuretData.password === accuretData.password2) {
-        //         console.log(accuretData);
-        //         setError({ status: true, message: "Registations Success", type: "success" });
-        //         document.getElementById("register-form").reset();
-        //     } else {
-        //         setError({ status: true, message: "Didn't match password and confirm password", type: "error" });
-        //     }
+        if (res.error) {
+            // console.log(typeof res.error.data.error);
+            console.log(res.error.data.error);
+            setServerError(res.error.data.error);
+        }
 
-        //     setTimeout(() => {
-        //         navigate("/dashboard");
-        //     }, 2000);
-        // } else {
-        //     setError({ status: true, message: "All fields are require", type: "error" });
-        // }
+        if (res.data) {
+            console.log(res.data);
+            navigate("/dashboard");
+        }
     };
 
     return (
         <>
-            <Box component="form" noValidate sx={{ m: 1 }} id="register-form" onSubmit={handleSubmit}>
-                {/* {error.status && (
-                    <Alert severity={error.type} sx={{ mt: 2 }}>
-                        {error.message}
-                    </Alert>
-                )} */}
+            {/* {server_error.email ? console.log(server_error.email[0]) : ""}
+            {server_error.non_field_errors ? console.log(server_error.non_field_errors[0]) : ""} */}
 
+            <Box component="form" noValidate sx={{ m: 1 }} id="register-form" onSubmit={handleSubmit}>
                 <TextField margin="normal" required fullWidth id="name" name="name" label="Full Name" />
+                {server_error.name ? <Typography style={{ color: "red", fontSize: 14, paddingLeft: 10 }}>{server_error.name[0]}</Typography> : ""}
 
                 <TextField margin="normal" required fullWidth id="email" name="email" label="Email Address" />
+                {server_error.email ? <Typography style={{ color: "red", fontSize: 14, paddingLeft: 10 }}>{server_error.email[0]}</Typography> : ""}
 
                 <TextField margin="normal" required fullWidth id="password" name="password" label="Password" type="password" />
+                {server_error.password ? (
+                    <Typography style={{ color: "red", fontSize: 14, paddingLeft: 10 }}>{server_error.password[0]}</Typography>
+                ) : (
+                    ""
+                )}
 
                 <TextField margin="normal" required fullWidth id="password2" name="password2" label="Confirm Password" type="password" />
+                {server_error.password2 ? (
+                    <Typography style={{ color: "red", fontSize: 14, paddingLeft: 10 }}>{server_error.password2[0]}</Typography>
+                ) : (
+                    ""
+                )}
 
                 <FormControlLabel control={<Checkbox value={true} color="primary" name="tc" id="tc" />} label="I agree to terms and conditions." />
+                {server_error.tc ? <Typography style={{ color: "red", fontSize: 14, paddingLeft: 10 }}>{server_error.tc[0]}</Typography> : ""}
 
                 <Box textAlign="center">
                     <Button type="submit" variant="contained" sx={{ mt: 2, mb: 2, px: 2 }}>
                         Join
                     </Button>
                 </Box>
+
+                {server_error.non_field_errors ? <Alert severity="error">{server_error.non_field_errors[0]}</Alert> : ""}
             </Box>
         </>
     );
