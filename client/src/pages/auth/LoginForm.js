@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { TextField, Button, Box, Alert, CircularProgress, Stack } from "@mui/material";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useLoginUserMutation } from "../../services/userAuthApi";
 
 const LoginForm = () => {
     const [error, setError] = useState({
@@ -9,9 +10,12 @@ const LoginForm = () => {
         type: "",
     });
 
+    //!     RTK Query
+    const [loginUser, { isLoading }] = useLoginUserMutation();
+
     const navigate = useNavigate();
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
         const data = new FormData(event.currentTarget);
@@ -20,6 +24,10 @@ const LoginForm = () => {
             email: data.get("email"),
             password: data.get("password"),
         };
+
+        const res = await loginUser(accuretData);
+
+        console.log(res);
 
         if (accuretData.email && accuretData.password) {
             console.log(accuretData);
