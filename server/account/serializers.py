@@ -89,7 +89,8 @@ class SendPasswordResetSerializer(serializers.Serializer):
             token = PasswordResetTokenGenerator().make_token(user)
             print("User Token : ", token)
 
-            link = f"http://127.0.0.1:8000/api/user/reset/{uid}/{token}/"
+            # link = f"http://127.0.0.1:8000/api/user/reset/{uid}/{token}/"
+            link = f"http://localhost:3000/api/user/reset/{uid}/{token}"
             # link = "http://127.0.0.1:8000/api/user/reset/"+uid+"/"+token
             print(link)
 
